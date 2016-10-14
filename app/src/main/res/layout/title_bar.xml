@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="55dp"
+    android:background="@color/title_bar" >
+
+    <LinearLayout
+        android:id="@+id/lin_left_btn"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="25dp"
+        android:gravity="center" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/icon_top_back" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/max_font" />
+
+    <LinearLayout
+        android:id="@+id/lin_right_btn"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="25dp"
+        android:gravity="center"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/tv_right_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_right_tag"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_alignRight="@id/lin_right_btn"
+        android:layout_alignTop="@id/lin_right_btn"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="4.0dip"
+        android:background="@drawable/oval_yellow_bg"
+        android:gravity="center"
+        android:paddingTop="0.0dip"
+        android:textColor="#ffffffff"
+        android:textSize="10.0sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

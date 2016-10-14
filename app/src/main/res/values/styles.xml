@@ -1,0 +1,61 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.NoActionBar.Fullscreen">
+
+    </style>
+    <style name="BaseDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:background">@null</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="CustomProgessBarStyle">
+        <item name="android:indeterminateDrawable">@drawable/progress_dailog_bg</item>
+    </style>
+
+    <style name="LoadingDialog" parent="BaseDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <style name="my_transparent_dialog_style">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="AnimZoom" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/zoom_out_enter</item>
+        <item name="android:windowExitAnimation">@anim/gradual_bottom_out</item>
+    </style>
+
+    <style name="CampainDialog" parent="BaseDialog">
+        <item name="android:windowAnimationStyle">@style/AnimZoom</item>
+        <item name="android:windowBackground">@android:color/transparent  <!-- @drawable/icon_kuaisan_white -->
+        </item>
+    </style>
+
+    <style name="hotel_price_star">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="GradualAnimBottom" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/gradual_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/gradual_bottom_out</item>
+    </style>
+
+</resources>

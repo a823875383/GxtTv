@@ -1,0 +1,87 @@
+package com.jsqix.gxt.tv.service;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+
+import com.jsqix.gxt.tv.utils.DateUtil;
+import com.jsqix.gxt.tv.utils.FileCacheUtils;
+import com.jsqix.gxt.tv.utils.ScreentShotUtil;
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest;
+
+import java.io.File;
+
+public class ScreenCapService extends Service {
+
+    public static final String ACTION = "com.qinshun.service.ScreenCapService";
+    final String TAG = getClass().getName();
+    private String imgPath = "";
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        //判断是否是定时截屏还是实时截屏
+        FileCacheUtils fileCacheUtils = new FileCacheUtils(getApplicationContext());
+        String regular = fileCacheUtils.getScreenRegular();
+        String now = fileCacheUtils.getScreenNow();
+        File dirRegular = new File(regular);
+        File dirNow = new File(now);
+        File[] files = dirNow.listFiles();
+        if (files != null) {
+            dirNow.delete();//删除实时截图中的文件
+        }
+        if (!dirNow.exists()) {
+            dirNow.mkdirs();
+        }
+        if (!dirRegular.exists()) {
+            dirRegular.mkdir();
+        } else {
+            // 视情况清除部分缓存
+            fileCacheUtils.removeCache(regular);
+        }
+        final boolean screenshot = intent.getBooleanExtra("screenshot", false);
+        if (screenshot == false) {//定时截图
+            imgPath = regular + "/" + DateUtil.getCurrentDatetimeString() + ".png";
+        } else {//实时截图
+            imgPath = now + "/" + DateUtil.getCurrentDatetimeString() + ".png";
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ScreentShotUtil.getInstance().takeScreenshot(ScreenCapService.this, imgPath);
+                if (screenshot) {
+                    //实时截图需要上传图片
+                    HttpUtils httpUtils = new HttpUtils();
+                    RequestParams params = new RequestParams();
+                    params.addBodyParameter("file", new File(imgPath));
+                    httpUtils.send(HttpRequest.HttpMethod.POST, "", params, new RequestCallBack<String>() {
+                        public void onSuccess(ResponseInfo<String> var1) {
+                            //上传成功
+                        }
+
+                        public void onFailure(HttpException var1, String var2) {
+                            //上传失败
+                        }
+                    });
+                }
+            }
+        }).start();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+
+}
