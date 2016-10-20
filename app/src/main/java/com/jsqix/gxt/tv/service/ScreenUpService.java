@@ -21,6 +21,7 @@ import java.util.List;
  * Created by dongqing on 16/9/19.
  */
 public class ScreenUpService extends Service {
+    public final static String ACTION = "com.qinshun.service.ScreenUpService";
     final static String TAG = ScreenUpService.class.getSimpleName();
     private String dir;
     private List<String> upFiles;
@@ -61,7 +62,8 @@ public class ScreenUpService extends Service {
 
                 @Override
                 public void onFailure(HttpException e, String s) {
-
+                    //上传失败重新上传
+                    upload();
                 }
             });
         }

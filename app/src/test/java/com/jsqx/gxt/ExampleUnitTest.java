@@ -1,4 +1,4 @@
-package com.jsqx.dianwotv;
+package com.jsqx.gxt;
 
 import org.junit.Test;
 

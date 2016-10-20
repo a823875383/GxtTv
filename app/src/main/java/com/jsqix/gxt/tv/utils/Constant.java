@@ -34,6 +34,8 @@ public class Constant {
 	public static final String TIME_FORMAT = "HHmmss";
 	public static final String DATETIME_FORMAT = DATE_FORMAT + TIME_FORMAT;
 
+	public final static String SD_DIRECTORY="com.jsqix.gxt.tv";
+
 	public Constant(Context context) {
 		width = ((Activity) context).getWindowManager().getDefaultDisplay()
 				.getWidth();

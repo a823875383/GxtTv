@@ -32,7 +32,7 @@ public class FileCacheUtils {
     /**
      * sd卡根目录
      */
-    private static String SD_ROOT_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private static String SD_ROOT_PATH = null;
 
     /**
      * 缓存的扩展名
@@ -60,6 +60,7 @@ public class FileCacheUtils {
     public FileCacheUtils(Context context) {
         this.context = context;
         DATA_ROOT_PATH = context.getCacheDir().getAbsolutePath();
+        SD_ROOT_PATH = Environment.getExternalStorageDirectory() + File.separator + Constant.SD_DIRECTORY;
     }
 
     /**
@@ -116,7 +117,7 @@ public class FileCacheUtils {
      * @return
      */
     public String getScreenDirectory() {
-        return SD_ROOT_PATH + "/dianwo" + "/screen";
+        return "/sdcard/" + Constant.SD_DIRECTORY + "/screen";
     }
 
     /**
@@ -145,9 +146,9 @@ public class FileCacheUtils {
     public String getCacheDirectory() {
         String cachePath = null;
         if (isSdcardAvailable()) {
-            cachePath = SD_ROOT_PATH + "/dianwo" + IMG_CACH_DIR;
+            cachePath = SD_ROOT_PATH + IMG_CACH_DIR;
         } else {
-            cachePath = DATA_ROOT_PATH + "/dianwo" + IMG_CACH_DIR;
+            cachePath = DATA_ROOT_PATH + IMG_CACH_DIR;
         }
         return cachePath;
     }

@@ -132,7 +132,7 @@ public class BaiDuLocationHelper implements InterfaceJSONGet {
 						String getUrl = url
 								+ "?http://api.map.baidu.com/location/ip?ak=1Pavd5KcVSyhQCmjWlRp2Qp0&ip="
 								+ ip
-								+ "&coor=bd09ll&mcode=20:75:7B:00:D3:21:A9:CC:08:64:5A:A5:B0:2E:2D:CA:99:E7:42:43;com.jsqx.dianwotv";
+								+ "&coor=bd09ll&mcode=20:75:7B:00:D3:21:A9:CC:08:64:5A:A5:B0:2E:2D:CA:99:E7:42:43;com.jsqix.gxt.tv";
 						HttpGet httpGet = new HttpGet(getUrl);
 						InputStream content = httpClient.execute(httpGet)
 								.getEntity().getContent();

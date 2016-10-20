@@ -1,4 +1,4 @@
-package com.jsqix.gxt.base;
+package com.jsqix.gxt.tv.base;
 
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,7 +8,6 @@ import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
-import com.jsqix.gxt.tv.base.BaseAty;
 import com.jsqix.gxt.tv.utils.PlayerUtil;
 
 /**

@@ -15,7 +15,7 @@ public class ScreenCapReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         // TODO Auto-generated method stub
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            PollingUtils.startPollingService(context, AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), 5, ScreenCapService.class, ScreenCapService.ACTION);
+            PollingUtils.startPollingService(context, AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime(), 5, ScreenCapService.class, ScreenCapService.DS_ACTION);
         }
     }
 

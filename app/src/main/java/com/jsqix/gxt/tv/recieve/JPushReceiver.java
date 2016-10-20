@@ -15,7 +15,6 @@ import org.json.JSONObject;
 
 import cn.jpush.android.api.JPushInterface;
 
-//import com.jsqix.dianwotv.AuthenticateActivity;
 
 /**
  * 自定义接收器

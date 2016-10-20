@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jsqix.gxt.tv">
 
-
     <uses-feature
         android:name="android.hardware.type.television"
         android:required="false" />
@@ -111,6 +110,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
+
                 <category android:name="com.jsqix.gxt.tv" />
             </intent-filter>
         </service>
@@ -167,7 +167,7 @@
             android:value="developer-default" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="197afdfa118a709e584a588b" />
+            android:value="03995f4198efffef2363b15d" />
         <!-- </>值来自开发者平台取得的AppKey -->
         <!-- JPush end -->
 
@@ -192,12 +192,12 @@
                 <action android:name="android.intent.action.ACTION_MEDIA_EJECT" />
             </intent-filter>
         </receiver>
-        <!-- 开机启动 截屏服务 -->
-        <receiver android:name=".recieve.ScreenCapReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+        <!--&lt;!&ndash; 开机启动 截屏服务 &ndash;&gt;-->
+        <!--<receiver android:name=".recieve.ScreenCapReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <!-- 截屏服务 -->
         <service
             android:name=".service.ScreenCapService"
@@ -209,6 +209,15 @@
 
         <activity
             android:name=".activity.LoginActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.NameActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.SplashActivity"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -216,12 +225,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activity.HomeActivity"
-            android:screenOrientation="landscape" />
-        <activity
-            android:name=".activity.NameActivity"
-            android:screenOrientation="landscape" />
     </application>
 
 </manifest>
