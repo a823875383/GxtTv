@@ -4,24 +4,67 @@ android {
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
 
+    signingConfigs {
+        release {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            storeFile file(properties.getProperty("RELEASE_STORE_FILE"))
+            storePassword properties.getProperty("RELEASE_STORE_PASSWORD", "")
+            keyAlias properties.getProperty("RELEASE_KEY_ALIA", "")
+            keyPassword properties.get("RELEASE_KEY_PASSWORD", "")
+        }
+    }
+
     defaultConfig {
         applicationId "com.jsqix.gxt.tv"
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 201609013
-        versionName "2.0.0.9"
+        versionCode 20161025
+        versionName "1.0.0"
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile;
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        File outputDirectory = new File(outputFile.parent);
+                        def fileName
+                        if (variant.buildType.name == "release") {
+                            fileName = "app_v${defaultConfig.versionName}_${packageTime()}.apk"
+                        } else {
+                            fileName = "app_v${defaultConfig.versionName}-debug.apk"
+                        }
+                        output.outputFile = new File(outputDirectory, fileName)
+                    }
+                }
+            }
+
+        }
+
+
+        debug {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            debuggable true
         }
     }
     sourceSets { main { assets.srcDirs = ['src/main/assets', 'src/main/assets/'] } }
+}
+
+
+def packageTime() {
+    return new Date().format("yyyyMMddHHmm", TimeZone.getTimeZone("GMT+8"))
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'com.kaopiz:kprogresshud:1.0.5'
+    compile 'com.zhy:base-adapter:3.0.3'
+
 }

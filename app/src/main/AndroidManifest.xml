@@ -192,18 +192,26 @@
                 <action android:name="android.intent.action.ACTION_MEDIA_EJECT" />
             </intent-filter>
         </receiver>
-        <!--&lt;!&ndash; 开机启动 截屏服务 &ndash;&gt;-->
-        <!--<receiver android:name=".recieve.ScreenCapReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <!-- &lt;!&ndash; 开机启动 截屏服务 &ndash;&gt; -->
+        <!-- <receiver android:name=".recieve.ScreenCapReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
         <!-- 截屏服务 -->
         <service
             android:name=".service.ScreenCapService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.qinshun.service.ScreenCapService" />
+                <action android:name="com.qinshun.service.ScreenCapService.ds" />
+            </intent-filter>
+        </service>
+        <!-- 上传服务 -->
+        <service
+            android:name=".service.ScreenUpService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.qinshun.service.ScreenUpService" />
             </intent-filter>
         </service>
 
@@ -212,7 +220,12 @@
             android:screenOrientation="landscape" />
         <activity
             android:name=".activity.HomeActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.NameActivity"
             android:screenOrientation="landscape" />
@@ -225,6 +238,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".WebActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

@@ -7,7 +7,6 @@ import android.content.Intent;
 
 import com.jsqix.gxt.tv.service.BroadCastService;
 import com.jsqix.gxt.tv.service.ScreenCapService;
-import com.jsqix.gxt.tv.service.ScreenUpService;
 import com.jsqix.gxt.tv.utils.CrashHandler;
 import com.jsqix.gxt.tv.utils.DeviceUtils;
 import com.jsqix.gxt.tv.utils.PollingUtils;
@@ -41,9 +40,8 @@ public class AppContext extends Application {
         // 打印设备信息
         printDevice();
         //应用启动时开始启动定时截屏服务
-        PollingUtils.startPollingService(this, 60 * 5, ScreenCapService.class, ScreenCapService.DS_ACTION);
-        //开启定时上传截图服务
-        PollingUtils.startPollingService(this, 60 * 60 * 5, ScreenUpService.class, ScreenUpService.ACTION);
+        PollingUtils.startPollingService(this, 60, ScreenCapService.class, ScreenCapService.DS_ACTION);
+
         super.onCreate();
     }
 

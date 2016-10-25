@@ -3,9 +3,14 @@ package com.jsqix.gxt.tv.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
+import com.jsqix.gxt.tv.api.ApiClient;
+import com.jsqix.gxt.tv.api.HttpUtil;
+import com.jsqix.gxt.tv.utils.ACache;
 import com.jsqix.gxt.tv.utils.DateUtil;
 import com.jsqix.gxt.tv.utils.FileCacheUtils;
+import com.jsqix.gxt.tv.utils.KeyUtils;
 import com.jsqix.gxt.tv.utils.ScreentShotUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
@@ -16,6 +21,8 @@ import com.lidroid.xutils.http.client.HttpRequest;
 
 import java.io.File;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ScreenCapService extends Service {
 
@@ -35,7 +42,7 @@ public class ScreenCapService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getAction() == DS_ACTION || intent.getAction() == SS_ACTION) {
+        if (intent != null && (intent.getAction() == DS_ACTION || intent.getAction() == SS_ACTION)) {
             //判断是否是定时截屏还是实时截屏
             FileCacheUtils fileCacheUtils = new FileCacheUtils(getApplicationContext());
             String regular = fileCacheUtils.getScreenRegular();
@@ -68,16 +75,24 @@ public class ScreenCapService extends Service {
                     ScreentShotUtil.getInstance().takeScreenshot(ScreenCapService.this, imgPath);
                     if (screenshot) {
                         //实时截图需要上传图片
+                        Map<String, Object> map = new HashMap<String, Object>();
+                        map.put("deviceId", ACache.get(ScreenCapService.this).getAsString(KeyUtils.S_ID));
+                        String hmac = ApiClient.getSignAfter(map, HttpUtil.ANDRID_SDK_KEY);
+                        map.put("hmac", hmac);
+
                         HttpUtils httpUtils = new HttpUtils();
                         RequestParams params = new RequestParams();
-                        params.addBodyParameter("file", new File(imgPath));
-                        httpUtils.send(HttpRequest.HttpMethod.POST, "", params, new RequestCallBack<String>() {
+                        params.addBodyParameter("file", new File(imgPath), "image/*");
+                        System.out.println(HttpUtil.UP_SCREENSHOT);
+                        httpUtils.send(HttpRequest.HttpMethod.POST, HttpUtil.UP_SCREENSHOT, params, new RequestCallBack<String>() {
                             public void onSuccess(ResponseInfo<String> var1) {
                                 //上传成功
+                                Log.v("", "success");
                             }
 
                             public void onFailure(HttpException var1, String var2) {
                                 //上传失败
+                                Log.v("", "failure");
                             }
                         });
                     }

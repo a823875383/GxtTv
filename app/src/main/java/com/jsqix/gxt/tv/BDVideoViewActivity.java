@@ -1,6 +1,5 @@
 package com.jsqix.gxt.tv;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -37,13 +36,16 @@ import com.baidu.cyberplayer.core.BVideoView.OnNetworkSpeedListener;
 import com.baidu.cyberplayer.core.BVideoView.OnPlayingBufferCacheListener;
 import com.baidu.cyberplayer.core.BVideoView.OnPreparedListener;
 import com.google.gson.Gson;
+import com.jsqix.gxt.tv.api.HttpUtil;
 import com.jsqix.gxt.tv.api.InterfaceJSONGet;
 import com.jsqix.gxt.tv.api.JSONGet;
+import com.jsqix.gxt.tv.base.MsgAty;
 import com.jsqix.gxt.tv.interfaces.AdList;
 import com.jsqix.gxt.tv.utils.ACache;
 import com.jsqix.gxt.tv.utils.BitmapHelp;
 import com.jsqix.gxt.tv.utils.Constant;
 import com.jsqix.gxt.tv.utils.FormatTools;
+import com.jsqix.gxt.tv.utils.KeyUtils;
 import com.jsqix.gxt.tv.utils.SdUtils;
 import com.jsqix.gxt.tv.utils.StringUtils;
 import com.lidroid.xutils.ViewUtils;
@@ -66,7 +68,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 
-public class BDVideoViewActivity extends Activity implements ViewFactory,
+public class BDVideoViewActivity extends MsgAty implements ViewFactory,
         OnPreparedListener, OnCompletionListener, OnErrorListener,
         OnInfoListener, OnPlayingBufferCacheListener,
         OnCompletionWithParamListener, OnNetworkSpeedListener,
@@ -134,12 +136,13 @@ public class BDVideoViewActivity extends Activity implements ViewFactory,
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_bdvideo_view);
-        aCache = ACache.get(this, "User");
+        aCache = ACache.get(this);
         aCache.put("onStop", false);
         sInstence = this;
         setAdList(this);
         init();
     }
+
 
     private void init() {
         ViewUtils.inject(this);
@@ -178,6 +181,7 @@ public class BDVideoViewActivity extends Activity implements ViewFactory,
         anims.add(AnimationUtils.loadAnimation(this, R.anim.grow_from_top));
         anims.add(AnimationUtils.loadAnimation(this, R.anim.in_translate_top));
         localList.add("assets/sy_ad1.jpg");
+        localList.add("assets/sy_ad2.jpg");
 
         getAds();
         startQuery();
@@ -325,7 +329,7 @@ public class BDVideoViewActivity extends Activity implements ViewFactory,
      */
     private void getAds() {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("pid", /* "315089" */aCache.getAsString("sid"));
+        map.put("deviceId", aCache.getAsString(KeyUtils.S_ID));
         JSONGet get = new JSONGet(this, map, this) {
 
             @Override
@@ -334,7 +338,7 @@ public class BDVideoViewActivity extends Activity implements ViewFactory,
 
             }
         };
-        get.execute("queryAdv");
+        get.execute(HttpUtil.GET_ADVERT);
     }
 
     @Override
@@ -343,12 +347,12 @@ public class BDVideoViewActivity extends Activity implements ViewFactory,
             JSONObject ret = new JSONObject(result);
             if ("000".equals(ret.getString("code"))) {
                 JSONArray array = ret.getJSONArray("obj");
-                String url = ret.getString("url");
                 serverList.clear();
                 for (int i = 0; i < array.length(); i++) {
                     JSONObject obj = array.getJSONObject(i);
-                    String name = obj.getString("NAME").trim();
-                    serverList.add(url + name);
+                    String name = obj.getString("hyperlink").trim();
+//                    String name = array.getString(i).trim();
+                    serverList.add(name);
                 }
             }
         } catch (JSONException e) {
@@ -387,7 +391,9 @@ public class BDVideoViewActivity extends Activity implements ViewFactory,
         }
         //是否把本地文件作为播放
         if (getSrcFileName(srcPath).size() > 0) {
-            pathList = getSrcFileName(srcPath);
+            if (StringUtils.toInt(aCache.getAsString(KeyUtils.S_STATUS)) == 1) {
+                pathList = getSrcFileName(srcPath);
+            }
         }
         Logger logger = Logger.getLogger("path:");
         logger.error(new Gson().toJson(pathList));
@@ -756,7 +762,7 @@ public class BDVideoViewActivity extends Activity implements ViewFactory,
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         super.onStop();
         Log.v(TAG, "onStop");
         // stop();/
@@ -793,6 +799,21 @@ public class BDVideoViewActivity extends Activity implements ViewFactory,
         mHandlerThread.quit();
         Log.v(TAG, "onDestroy");
 
+    }
+
+    @Override
+    protected void executeMessage(int instructions) {
+        if (instructions == 1001 || instructions == 1003) {
+            if (instructions == 1001) {
+                aCache.put(KeyUtils.S_STATUS, "-1");
+            } else {
+                aCache.put(KeyUtils.S_STATUS, "1");
+            }
+            getAdList();
+
+        } else if (instructions == 1002) {
+            actualShot();
+        }
     }
 
     public static BDVideoViewActivity getsInstence() {

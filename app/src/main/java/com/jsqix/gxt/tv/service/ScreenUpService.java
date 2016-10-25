@@ -5,7 +5,11 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.jsqix.gxt.tv.api.ApiClient;
+import com.jsqix.gxt.tv.api.HttpUtil;
+import com.jsqix.gxt.tv.utils.ACache;
 import com.jsqix.gxt.tv.utils.FileCacheUtils;
+import com.jsqix.gxt.tv.utils.KeyUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -15,7 +19,10 @@ import com.lidroid.xutils.http.client.HttpRequest;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dongqing on 16/9/19.
@@ -39,31 +46,51 @@ public class ScreenUpService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void upload() {
+    synchronized private void upload() {
         List<String> files = getSrcFileName(dir);
         if (files.size() > 0) {
             if (files.size() > 5) {
                 upFiles = new ArrayList<String>(files.subList(0, 5));
+            } else {
+                upFiles = new ArrayList<String>(files);
             }
         }
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("deviceId", ACache.get(this).getAsString(KeyUtils.S_ID));
+        String hmac = ApiClient.getSignAfter(map, HttpUtil.ANDRID_SDK_KEY);
+        map.put("hmac", hmac);
         if (upFiles != null && upFiles.size() > 0) {
             HttpUtils httpUtils = new HttpUtils();
+            httpUtils.configTimeout(100 * 1000);
+            httpUtils.configRequestRetryCount(3);
             RequestParams params = new RequestParams();
             for (int i = 0; i < upFiles.size(); i++) {
-                params.addBodyParameter("file" + i, new File(upFiles.get(i)));
+                params.addBodyParameter("mfile" + i, new File(upFiles.get(i)), "image/*");
             }
-            httpUtils.send(HttpRequest.HttpMethod.POST, "", params, new RequestCallBack<Object>() {
+
+            Iterator<Map.Entry<String, Object>> strings = map.entrySet().iterator();
+            while (strings.hasNext()) {
+                Map.Entry<String, Object> entry = strings.next();
+                params.addBodyParameter(entry.getKey(), entry.getValue() + "");
+            }
+
+            System.out.println(HttpUtil.UP_SCREENSHOT);
+            httpUtils.send(HttpRequest.HttpMethod.POST, HttpUtil.UP_SCREENSHOT, params, new RequestCallBack<Object>() {
                 @Override
                 public void onSuccess(ResponseInfo<Object> responseInfo) {
+                    Log.v("", "success");
                     //上传成功，递归上传
                     deleFile(dir, upFiles);
-                    upload();
+                    if (getSrcFileName(dir).size() > 0) {
+                        upload();
+                    }
                 }
 
                 @Override
                 public void onFailure(HttpException e, String s) {
+                    Log.v("", "failure");
                     //上传失败重新上传
-                    upload();
+//                    upload();
                 }
             });
         }

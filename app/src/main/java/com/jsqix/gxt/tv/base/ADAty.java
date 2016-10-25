@@ -14,7 +14,7 @@ import com.jsqix.gxt.tv.utils.PlayerUtil;
  * Created by dongqing on 2016/10/12.
  */
 
-public class ADAty extends BaseAty implements TextWatcher {
+public abstract  class ADAty extends BaseAty implements TextWatcher {
     public PlayerUtil playerUtil;
 
     @Override

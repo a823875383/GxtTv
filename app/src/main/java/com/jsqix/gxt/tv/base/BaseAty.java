@@ -14,9 +14,7 @@ import com.jsqix.gxt.tv.view.LoadingDialog;
 import com.jsqix.gxt.tv.view.MyDialog;
 import com.lidroid.xutils.ViewUtils;
 
-import cn.jpush.android.api.InstrumentedActivity;
-
-public class BaseAty extends InstrumentedActivity {
+public abstract class BaseAty extends MsgAty {
     private String TAG = "BaseAty";
     public ACache aCache;
     private LoadingDialog loadingDialog;
@@ -29,14 +27,16 @@ public class BaseAty extends InstrumentedActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        aCache = ACache.get(this, "User");
-
+        aCache = ACache.get(this);
     }
+    public abstract void initView();
 
     @Override
     public void setContentView(int layoutResID) {
         super.setContentView(layoutResID);
         ViewUtils.inject(this);
+
+        initView();
     }
 
     public boolean isLogin() {

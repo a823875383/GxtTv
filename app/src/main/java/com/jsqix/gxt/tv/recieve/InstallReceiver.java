@@ -15,7 +15,7 @@ public class InstallReceiver extends BroadcastReceiver {
     public void onReceive(final Context c, Intent intent) {
         Log.v("GetUpdateState", intent.getAction());
         if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
-            if (!ProcessUtils.isTopActivity(c)) {
+            if (!ProcessUtils.isRunning(c)) {
                 new Thread(new Runnable() {
 
                     @Override

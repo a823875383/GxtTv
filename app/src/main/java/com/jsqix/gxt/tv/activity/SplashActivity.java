@@ -26,6 +26,16 @@ public class SplashActivity extends BaseAty {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+    }
+
+    @Override
+    protected void executeMessage(int instructions) {
+
+    }
+
+
+    @Override
+    public void initView() {
         setAlias();
     }
 
@@ -33,15 +43,15 @@ public class SplashActivity extends BaseAty {
         String alias = JPushUtil.getUUID(this, "", Constant.Channel.BOX);
         if (TextUtils.isEmpty(alias)) {
             Log.i(TAG, "alias empty");
-            SDLogUtils.getLogger(TAG).info("alias empty");
+            SDLogUtils.getLogger("Splash").error("alias empty");
             return;
         }
         if (!JPushUtil.isValidTagAndAlias(alias)) {
             Log.i(TAG, "alias not valid");
-            SDLogUtils.getLogger(TAG).info("alias not valid");
+            SDLogUtils.getLogger("Splash").error("alias not valid");
             return;
         }
-        SDLogUtils.getLogger(TAG).info("set alias");
+        SDLogUtils.getLogger("Splash").error("set alias");
         // 调用JPush API设置Alias
         mHandler.sendMessage(mHandler.obtainMessage(MSG_SET_ALIAS, alias));
     }
@@ -77,17 +87,18 @@ public class SplashActivity extends BaseAty {
             switch (code) {
                 case 0:
                     logs = "Set tag and alias success";
-                    SDLogUtils.getLogger(TAG).info("Set tag and alias success");
-                    aCache.put(KeyUtils.TOKEN,JPushUtil.getUUID(SplashActivity.this, "",Constant.Channel.BOX));
+                    SDLogUtils.getLogger("Splash").error(logs);
+                    aCache.put(KeyUtils.MAC, Constant.getMacAddress(Constant.Channel.BOX).replace(":", ""));
+                    aCache.put(KeyUtils.TOKEN, JPushUtil.getUUID(SplashActivity.this, "", Constant.Channel.BOX));
                     Log.i(TAG, logs);
-                    startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
                     break;
 
                 case 6002:
                     logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
                     Log.i(TAG, logs);
-                    SDLogUtils.getLogger(TAG).info("Failed to set alias and tags due to timeout. Try again after 60s.");
+                    SDLogUtils.getLogger("Splash").error(logs);
                     if (JPushUtil.isConnected(getApplicationContext())) {
                         mHandler.sendMessageDelayed(
                                 mHandler.obtainMessage(MSG_SET_TAGS, tags),
@@ -112,15 +123,18 @@ public class SplashActivity extends BaseAty {
             switch (code) {
                 case 0:
                     logs = "Set tag and alias success";
-                    aCache.put(KeyUtils.TOKEN,JPushUtil.getUUID(SplashActivity.this, "",Constant.Channel.BOX));
+                    SDLogUtils.getLogger("Splash").error(logs);
+                    aCache.put(KeyUtils.MAC, Constant.getMacAddress(Constant.Channel.BOX).replace(":", ""));
+                    aCache.put(KeyUtils.TOKEN, JPushUtil.getUUID(SplashActivity.this, "", Constant.Channel.BOX));
                     Log.i(TAG, logs);
-                    startActivity(new Intent(SplashActivity.this,LoginActivity.class));
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
                     break;
 
                 case 6002:
                     logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
                     Log.i(TAG, logs);
+                    SDLogUtils.getLogger("Splash").error(logs);
                     if (JPushUtil.isConnected(getApplicationContext())) {
                         mHandler.sendMessageDelayed(
                                 mHandler.obtainMessage(MSG_SET_ALIAS, alias),
