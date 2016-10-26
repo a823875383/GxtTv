@@ -14,7 +14,7 @@ import android.os.SystemClock;
 public class PollingUtils {
 
     //开启轮询服务
-    public static void startPollingService(Context context, int type, long startSeconds, int delaySeconds, Class<?> cls, String action) {
+    public static void startPollingService(Context context, int type, long startSeconds, long delaySeconds, Class<?> cls, String action) {
         //获取AlarmManager系统服务
         AlarmManager manager = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
@@ -36,7 +36,7 @@ public class PollingUtils {
 //				delaySeconds * 1000, pendingIntent);
     }
 
-    public static void startPollingService(Context context, int delaySeconds, Class<?> cls, String action) {
+    public static void startPollingService(Context context, long delaySeconds, Class<?> cls, String action) {
         AlarmManager manager = (AlarmManager) context
                 .getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, cls);

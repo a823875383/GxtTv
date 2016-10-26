@@ -73,7 +73,7 @@ public class ScreenCapService extends Service {
                 @Override
                 public void run() {
                     ScreentShotUtil.getInstance().takeScreenshot(ScreenCapService.this, imgPath);
-                    if (screenshot) {
+//                    if (screenshot) {
                         //实时截图需要上传图片
                         Map<String, Object> map = new HashMap<String, Object>();
                         map.put("deviceId", ACache.get(ScreenCapService.this).getAsString(KeyUtils.S_ID));
@@ -96,7 +96,7 @@ public class ScreenCapService extends Service {
                             }
                         });
                     }
-                }
+//                }
             }).start();
         }
         return super.onStartCommand(intent, flags, startId);

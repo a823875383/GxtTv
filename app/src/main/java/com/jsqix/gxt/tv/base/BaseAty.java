@@ -28,6 +28,7 @@ public abstract class BaseAty extends MsgAty {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         aCache = ACache.get(this);
+        loadingDialog = new LoadingDialog(this);
     }
     public abstract void initView();
 

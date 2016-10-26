@@ -48,6 +48,7 @@ import com.jsqix.gxt.tv.utils.FormatTools;
 import com.jsqix.gxt.tv.utils.KeyUtils;
 import com.jsqix.gxt.tv.utils.SdUtils;
 import com.jsqix.gxt.tv.utils.StringUtils;
+import com.jsqix.gxt.tv.utils.TimeUtils;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 
@@ -128,6 +129,9 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
     List<Animation> anims = new ArrayList<Animation>();
     public AdList adList;
     private static BDVideoViewActivity sInstence = null;
+
+
+    private boolean isMsg = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,11 +306,12 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
 
             @Override
             public void run() {
+                isMsg = false;
                 getAds();
             }
         };
         if (timer2 != null && task2 != null) {
-            timer2.schedule(task2, 5 * 60 * 1000, 5 * 60 * 1000);
+           timer2.schedule(task2, TimeUtils.GET_ADS, TimeUtils.GET_ADS);
         }
 
     }
@@ -360,13 +365,17 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             e.printStackTrace();
         }
         getPathsList();
-        if (mVV.isPlaying()) {
+        if (isMsg == false) {
+            if (mVV.isPlaying()) {
 
+            } else {
+                stop();
+                start();
+            }
         } else {
             stop();
             start();
         }
-
     }
 
     private void getPathsList() {
@@ -553,14 +562,14 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
 
                     mVV.setVideoPath(mVideoSource);
                     mVV.setVideoScalingMode(BVideoView.VIDEO_SCALING_MODE_SCALE_TO_FIT);
-                    /**
-                     * 续播，如果需要如此
-                     */
-                    if (mLastPos > 0) {
-
-                        mVV.seekTo(mLastPos);
-                        mLastPos = 0;
-                    }
+//                    /**
+//                     * 续播，如果需要如此
+//                     */
+//                    if (mLastPos > 0) {
+//
+//                        mVV.seekTo(mLastPos);
+//                        mLastPos = 0;
+//                    }
 
                     /**
                      * 显示或者隐藏缓冲提示
@@ -809,7 +818,8 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             } else {
                 aCache.put(KeyUtils.S_STATUS, "1");
             }
-            getAdList();
+            isMsg = true;
+            getAds();
 
         } else if (instructions == 1002) {
             actualShot();

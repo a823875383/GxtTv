@@ -43,6 +43,7 @@
                     android:drawableLeft="@mipmap/ic_user"
                     android:drawablePadding="10dp"
                     android:hint="登录名"
+                    android:singleLine="true"
                     android:textColorHint="@color/white"
                     android:textSize="@dimen/big_font" />
             </LinearLayout>
@@ -62,6 +63,7 @@
                     android:drawableLeft="@mipmap/ic_pass"
                     android:drawablePadding="10dp"
                     android:hint="密码"
+                    android:singleLine="true"
                     android:inputType="textPassword"
                     android:textColorHint="@color/white"
                     android:textSize="@dimen/big_font" />

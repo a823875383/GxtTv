@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public abstract class JSONPost extends AsyncTask<String, String, String> {
-    String response = "", resultString = "";
+    String response = "";
     int resultCode = 0;
 
     Context context;
@@ -59,8 +59,8 @@ public abstract class JSONPost extends AsyncTask<String, String, String> {
             e.printStackTrace();
             System.out.println("response is " + e.getMessage());
         }
-        System.out.println("response is " + resultString);
-        return resultString;
+        System.out.println("response is " + response);
+        return response;
     }
 
     private void XutilsRequst(String url) throws Exception {

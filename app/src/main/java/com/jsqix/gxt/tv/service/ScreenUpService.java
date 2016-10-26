@@ -62,7 +62,7 @@ public class ScreenUpService extends Service {
         if (upFiles != null && upFiles.size() > 0) {
             HttpUtils httpUtils = new HttpUtils();
             httpUtils.configTimeout(100 * 1000);
-            httpUtils.configRequestRetryCount(3);
+//            httpUtils.configRequestRetryCount(3);
             RequestParams params = new RequestParams();
             for (int i = 0; i < upFiles.size(); i++) {
                 params.addBodyParameter("mfile" + i, new File(upFiles.get(i)), "image/*");

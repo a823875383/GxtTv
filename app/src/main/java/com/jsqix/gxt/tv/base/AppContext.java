@@ -1,6 +1,7 @@
 package com.jsqix.gxt.tv.base;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import com.jsqix.gxt.tv.utils.CrashHandler;
 import com.jsqix.gxt.tv.utils.DeviceUtils;
 import com.jsqix.gxt.tv.utils.PollingUtils;
 import com.jsqix.gxt.tv.utils.SDLogUtils;
+import com.jsqix.gxt.tv.utils.TimeUtils;
 
 import org.apache.log4j.Logger;
 
@@ -40,7 +42,7 @@ public class AppContext extends Application {
         // 打印设备信息
         printDevice();
         //应用启动时开始启动定时截屏服务
-        PollingUtils.startPollingService(this, 60, ScreenCapService.class, ScreenCapService.DS_ACTION);
+        PollingUtils.startPollingService(this, AlarmManager.RTC, TimeUtils.getFirstTime(), TimeUtils.SCREENSHOT, ScreenCapService.class, ScreenCapService.DS_ACTION);
 
         super.onCreate();
     }

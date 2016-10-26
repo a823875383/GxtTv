@@ -8,8 +8,8 @@ import android.widget.EditText;
 import com.google.gson.Gson;
 import com.jsqix.gxt.tv.R;
 import com.jsqix.gxt.tv.api.HttpUtil;
-import com.jsqix.gxt.tv.api.InterfaceJSONGet;
-import com.jsqix.gxt.tv.api.JSONGet;
+import com.jsqix.gxt.tv.api.InterfaceJSONPost;
+import com.jsqix.gxt.tv.api.JSONPost;
 import com.jsqix.gxt.tv.base.BaseAty;
 import com.jsqix.gxt.tv.obj.BaseObj;
 import com.jsqix.gxt.tv.utils.KeyUtils;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class NameActivity extends BaseAty implements InterfaceJSONGet {
+public class NameActivity extends BaseAty implements InterfaceJSONPost {
     @ViewInject(R.id.et_name)
     private EditText screenName;
 
@@ -56,17 +56,17 @@ public class NameActivity extends BaseAty implements InterfaceJSONGet {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("deviceId", aCache.getAsString(KeyUtils.S_ID));
         map.put("deviceName", StringUtils.textToString(screenName));
-        JSONGet get = new JSONGet(this, map, this) {
+        JSONPost post = new JSONPost(this, map, this) {
             @Override
             public void onPreExecute() {
                 showLoading();
             }
         };
-        get.execute(HttpUtil.SET_DEVICE_NAME);
+        post.execute(HttpUtil.SET_DEVICE_NAME);
     }
 
     @Override
-    public void getCallback(int resultCode, String result) {
+    public void postCallback(int resultCode, String result) {
         hideLoading();
         BaseObj baseObj = new Gson().fromJson(result, BaseObj.class);
         if (baseObj != null) {
@@ -74,6 +74,8 @@ public class NameActivity extends BaseAty implements InterfaceJSONGet {
                 startActivity(new Intent(this, HomeActivity.class));
                 aCache.put(KeyUtils.S_NAME, StringUtils.textToString(screenName));
                 finish();
+            } else {
+                ToastUtils.toast(this, baseObj.getMsg());
             }
         } else {
             ToastUtils.toast(this, "链接错误,请稍后重试");

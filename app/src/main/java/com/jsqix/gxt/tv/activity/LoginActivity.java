@@ -8,8 +8,8 @@ import android.widget.EditText;
 import com.google.gson.Gson;
 import com.jsqix.gxt.tv.R;
 import com.jsqix.gxt.tv.api.HttpUtil;
-import com.jsqix.gxt.tv.api.InterfaceJSONGet;
-import com.jsqix.gxt.tv.api.JSONGet;
+import com.jsqix.gxt.tv.api.InterfaceJSONPost;
+import com.jsqix.gxt.tv.api.JSONPost;
 import com.jsqix.gxt.tv.base.BaseAty;
 import com.jsqix.gxt.tv.obj.LoginResult;
 import com.jsqix.gxt.tv.utils.KeyUtils;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class LoginActivity extends BaseAty implements InterfaceJSONGet {
+public class LoginActivity extends BaseAty implements InterfaceJSONPost {
     @ViewInject(R.id.et_name)
     private EditText loginName;
     @ViewInject(R.id.et_pass)
@@ -67,17 +67,17 @@ public class LoginActivity extends BaseAty implements InterfaceJSONGet {
         map.put("uPassword", StringUtils.textToString(loginPass));
         map.put("mac", aCache.getAsString(KeyUtils.MAC));
         map.put("token", aCache.getAsString(KeyUtils.TOKEN));
-        JSONGet get = new JSONGet(this, map, this) {
+        JSONPost post = new JSONPost(this, map, this) {
             @Override
             public void onPreExecute() {
                 showLoading();
             }
         };
-        get.execute(HttpUtil.LOGIN);
+        post.execute(HttpUtil.LOGIN);
     }
 
     @Override
-    public void getCallback(int resultCode, String result) {
+    public void postCallback(int resultCode, String result) {
         hideLoading();
         LoginResult loginResult = new Gson().fromJson(result, LoginResult.class);
         if (loginResult != null) {
@@ -94,6 +94,8 @@ public class LoginActivity extends BaseAty implements InterfaceJSONGet {
                     startActivity(new Intent(this, HomeActivity.class));
                 }
                 finish();
+            } else {
+                ToastUtils.toast(this, loginResult.getMsg());
             }
         } else {
             ToastUtils.toast(this, "链接错误,请稍后重试");

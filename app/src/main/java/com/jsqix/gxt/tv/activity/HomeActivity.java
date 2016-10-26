@@ -16,9 +16,7 @@ import com.jsqix.gxt.tv.api.InterfaceJSONGet;
 import com.jsqix.gxt.tv.api.JSONGet;
 import com.jsqix.gxt.tv.base.ADAty;
 import com.jsqix.gxt.tv.obj.HomeResult;
-import com.jsqix.gxt.tv.service.ScreenUpService;
 import com.jsqix.gxt.tv.utils.KeyUtils;
-import com.jsqix.gxt.tv.utils.PollingUtils;
 import com.jsqix.gxt.tv.utils.ToastUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnItemClick;
@@ -45,7 +43,7 @@ public class HomeActivity extends ADAty implements InterfaceJSONGet {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         //开启定时上传截图服务
-        PollingUtils.startPollingService(this, 2 * 60, ScreenUpService.class, ScreenUpService.ACTION);
+//        PollingUtils.startPollingService(this, 2 * 60, ScreenUpService.class, ScreenUpService.ACTION);
     }
 
     @Override
@@ -57,6 +55,13 @@ public class HomeActivity extends ADAty implements InterfaceJSONGet {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getData();
+
+    }
 
     @Override
     public void initView() {
@@ -64,8 +69,6 @@ public class HomeActivity extends ADAty implements InterfaceJSONGet {
         contactName.setText(aCache.getAsString(KeyUtils.S_PHONE));
         adapter = new HomeAdapter(this, R.layout.item_menu, data);
         gridView.setAdapter(adapter);
-
-        getData();
     }
 
     @OnItemClick(R.id.gridView)
