@@ -37,8 +37,8 @@ import com.baidu.cyberplayer.core.BVideoView.OnPlayingBufferCacheListener;
 import com.baidu.cyberplayer.core.BVideoView.OnPreparedListener;
 import com.google.gson.Gson;
 import com.jsqix.gxt.tv.api.HttpUtil;
-import com.jsqix.gxt.tv.api.InterfaceJSONGet;
-import com.jsqix.gxt.tv.api.JSONGet;
+import com.jsqix.gxt.tv.api.InterfaceJSONPost;
+import com.jsqix.gxt.tv.api.JSONPost;
 import com.jsqix.gxt.tv.base.MsgAty;
 import com.jsqix.gxt.tv.interfaces.AdList;
 import com.jsqix.gxt.tv.utils.ACache;
@@ -73,7 +73,7 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
         OnPreparedListener, OnCompletionListener, OnErrorListener,
         OnInfoListener, OnPlayingBufferCacheListener,
         OnCompletionWithParamListener, OnNetworkSpeedListener,
-        InterfaceJSONGet, AdList {
+        InterfaceJSONPost, AdList {
     private final String TAG = "BDVideoViewActivity";
 
     private String srcPath = "/mnt/usb/sda1/video/";
@@ -311,7 +311,7 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             }
         };
         if (timer2 != null && task2 != null) {
-           timer2.schedule(task2, TimeUtils.GET_ADS, TimeUtils.GET_ADS);
+            timer2.schedule(task2, TimeUtils.GET_ADS, TimeUtils.GET_ADS);
         }
 
     }
@@ -335,7 +335,7 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
     private void getAds() {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("deviceId", aCache.getAsString(KeyUtils.S_ID));
-        JSONGet get = new JSONGet(this, map, this) {
+        JSONPost post = new JSONPost(this, map, this) {
 
             @Override
             public void onPreExecute() {
@@ -343,11 +343,11 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
 
             }
         };
-        get.execute(HttpUtil.GET_ADVERT);
+        post.execute(HttpUtil.GET_ADVERT);
     }
 
     @Override
-    public void getCallback(int resultCode, String result) {
+    public void postCallback(int resultCode, String result) {
         try {
             JSONObject ret = new JSONObject(result);
             if ("000".equals(ret.getString("code"))) {

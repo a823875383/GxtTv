@@ -22,6 +22,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class ScreenCapService extends Service {
@@ -74,28 +75,34 @@ public class ScreenCapService extends Service {
                 public void run() {
                     ScreentShotUtil.getInstance().takeScreenshot(ScreenCapService.this, imgPath);
 //                    if (screenshot) {
-                        //实时截图需要上传图片
-                        Map<String, Object> map = new HashMap<String, Object>();
-                        map.put("deviceId", ACache.get(ScreenCapService.this).getAsString(KeyUtils.S_ID));
-                        String hmac = ApiClient.getSignAfter(map, HttpUtil.ANDRID_SDK_KEY);
-                        map.put("hmac", hmac);
+                    //实时截图需要上传图片
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("deviceId", ACache.get(ScreenCapService.this).getAsString(KeyUtils.S_ID));
+                    String hmac = ApiClient.getSignAfter(map, HttpUtil.ANDRID_SDK_KEY);
+                    map.put("hmac", hmac);
 
-                        HttpUtils httpUtils = new HttpUtils();
-                        RequestParams params = new RequestParams();
-                        params.addBodyParameter("file", new File(imgPath), "image/*");
-                        System.out.println(HttpUtil.UP_SCREENSHOT);
-                        httpUtils.send(HttpRequest.HttpMethod.POST, HttpUtil.UP_SCREENSHOT, params, new RequestCallBack<String>() {
-                            public void onSuccess(ResponseInfo<String> var1) {
-                                //上传成功
-                                Log.v("", "success");
-                            }
-
-                            public void onFailure(HttpException var1, String var2) {
-                                //上传失败
-                                Log.v("", "failure");
-                            }
-                        });
+                    HttpUtils httpUtils = new HttpUtils();
+                    httpUtils.configRequestRetryCount(3);
+                    RequestParams params = new RequestParams();
+                    params.addBodyParameter("file", new File(imgPath), "image/*");
+                    Iterator<Map.Entry<String, Object>> strings = map.entrySet().iterator();
+                    while (strings.hasNext()) {
+                        Map.Entry<String, Object> entry = strings.next();
+                        params.addBodyParameter(entry.getKey(), entry.getValue() + "");
                     }
+                    System.out.println(HttpUtil.UP_SCREENSHOT);
+                    httpUtils.send(HttpRequest.HttpMethod.POST, HttpUtil.UP_SCREENSHOT, params, new RequestCallBack<String>() {
+                        public void onSuccess(ResponseInfo<String> var1) {
+                            //上传成功
+                            Log.v("", "success");
+                        }
+
+                        public void onFailure(HttpException var1, String var2) {
+                            //上传失败
+                            Log.v("", "failure");
+                        }
+                    });
+                }
 //                }
             }).start();
         }

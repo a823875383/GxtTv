@@ -53,7 +53,7 @@ public abstract class MsgAty extends InstrumentedActivity {
                         if (StringUtils.toInt(object.get("dictate_type")) == 1004) {
                             PollingUtils.stopPollingService(MsgAty.this, ScreenCapService.class, ScreenCapService.DS_ACTION);
                             int interval = StringUtils.toInt(object.get("interval"));
-                            PollingUtils.startPollingService(MsgAty.this, AlarmManager.RTC, TimeUtils.getFirstTime(interval), interval > 1 ? interval * 60 : TimeUtils.SCREENSHOT, ScreenCapService.class, ScreenCapService.DS_ACTION);
+                            PollingUtils.startPollingService(MsgAty.this, AlarmManager.RTC, TimeUtils.getFirstTime(interval), interval >= 1 ? interval * 60 : TimeUtils.SCREENSHOT, ScreenCapService.class, ScreenCapService.DS_ACTION);
                         }
 
                         executeMessage(StringUtils.toInt(object.get("dictate_type")));
