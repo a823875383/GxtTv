@@ -65,6 +65,7 @@ public class GetUpdateState {
 		}
 		return updateState;
 	}
+
 	@Override
 	public String toString() {
 		return "GetUpdateState [appVersion=" + appVersion + ", app_url="

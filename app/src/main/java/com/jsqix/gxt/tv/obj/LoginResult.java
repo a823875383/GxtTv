@@ -26,6 +26,7 @@ public class LoginResult extends BaseObj {
         private String device_name;
         private String device_status;
         private String device_phone;
+        private String device_interval;
 
         public String getDevice_id() {
             return device_id;
@@ -57,6 +58,14 @@ public class LoginResult extends BaseObj {
 
         public String getDevice_phone() {
             return device_phone;
+        }
+
+        public void setDevice_interval(String device_interval) {
+            this.device_interval = device_interval;
+        }
+
+        public String getDevice_interval() {
+            return device_interval;
         }
     }
 }

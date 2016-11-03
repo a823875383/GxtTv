@@ -21,9 +21,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jsqix.gxt.tv.R;
 import com.jsqix.gxt.tv.base.AppContext;
 import com.jsqix.gxt.tv.obj.GetUpdateState;
-import com.jsqix.gxt.tv.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

@@ -203,6 +203,16 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
     };
 
     private void display(String path) throws Exception {
+        /**
+         * 如果已经开发播放，先停止播放
+         */
+        if (mPlayerStatus != PLAYER_STATUS.PLAYER_IDLE) {
+            mVV.stopPlayback();
+            synchronized (SYNC_Playing) {
+                SYNC_Playing.notify();
+            }
+            mPlayerStatus = PLAYER_STATUS.PLAYER_IDLE;
+        }
         mSwitcher.setInAnimation(anims.get(ainCount));
         if (bitmap != null && bitmap.isRecycled()) {
             bitmap.recycle();
@@ -236,7 +246,7 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
                 mVV.setVisibility(View.VISIBLE);
                 mVVCtl.setVisibility(View.VISIBLE);
                 mSwitcher.setVisibility(View.GONE);
-                stop();
+                stopPaly();
                 play(path);
             }
         }
@@ -286,6 +296,21 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
 
     // 停止
     private void stop() {
+        imgCount = 0;
+        ainCount = 0;
+        if (timer1 != null) {
+            timer1.cancel();
+            timer1 = null;
+        }
+        if (task1 != null) {
+            task1.cancel();
+            task1 = null;
+        }
+
+    }
+
+    // 停止
+    private void stopPaly() {
         if (timer1 != null) {
             timer1.cancel();
             timer1 = null;
@@ -308,6 +333,7 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             public void run() {
                 isMsg = false;
                 getAds();
+                stop();
             }
         };
         if (timer2 != null && task2 != null) {
@@ -359,6 +385,8 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
 //                    String name = array.getString(i).trim();
                     serverList.add(name);
                 }
+            } else {
+                serverList.clear();
             }
         } catch (JSONException e) {
             // TODO Auto-generated catch block
@@ -369,11 +397,9 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             if (mVV.isPlaying()) {
 
             } else {
-                stop();
                 start();
             }
         } else {
-            stop();
             start();
         }
     }
@@ -405,7 +431,7 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             }
         }
         Logger logger = Logger.getLogger("path:");
-        logger.error(new Gson().toJson(pathList));
+        logger.warn(new Gson().toJson(pathList));
     }
 
     @Override
@@ -445,6 +471,13 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             start();
             return;
         }
+
+
+        /**
+         * 发起一次新的播放任务
+         */
+        if (mEventHandler.hasMessages(EVENT_PLAY))
+            mEventHandler.removeMessages(EVENT_PLAY);
         mEventHandler.sendEmptyMessage(EVENT_PLAY);
     }
 
@@ -699,6 +732,42 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
      */
     @Override
     public boolean onError(int what, int extra) {
+        Logger logger = Logger.getLogger("video play:");
+        logger.error("播放出现异常");
+        String tag = "";
+        switch (what) {
+            case BVideoView.MEDIA_ERROR_UNKNOWN:
+                tag = "未知";
+                break;
+            case BVideoView.MEDIA_ERROR_NO_INPUTFILE:
+                tag = "不是输入文件";
+                break;
+            case BVideoView.MEDIA_ERROR_INVALID_INPUTFILE:
+                tag = "非法输入文件";
+                break;
+            case BVideoView.MEDIA_ERROR_NO_SUPPORTED_CODEC:
+                tag = "不支持解码器";
+                break;
+            case BVideoView.MEDIA_ERROR_DISPLAY:
+                tag = "显示异常";
+                break;
+        }
+        switch (extra) {
+            case BVideoView.MEDIA_ERROR_IO:
+                tag += ":IO异常";
+                break;
+            case BVideoView.MEDIA_ERROR_MALFORMED:
+                tag += ":畸形异常";
+                break;
+            case BVideoView.MEDIA_ERROR_UNSUPPORTED:
+                tag += ":不支持异常";
+                break;
+            case BVideoView.MEDIA_ERROR_TIMED_OUT:
+                tag += ":超时异常";
+                break;
+        }
+        logger.error(tag);
+
         uiHandler.sendEmptyMessage(3);
         synchronized (SYNC_Playing) {
             SYNC_Playing.notify();
@@ -735,8 +804,8 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
         public void handleMessage(Message msg) {
             // 更新界面
             if (msg.what == 3) {
-                Toast.makeText(BDVideoViewActivity.this, "播放出现异常",
-                        Toast.LENGTH_LONG).show();
+//                Toast.makeText(BDVideoViewActivity.this, "播放出现异常",
+//                        Toast.LENGTH_LONG).show();
             }
         }
     };
@@ -757,6 +826,9 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             // don't stop pause
             // mVV.stopPlayback();
             mVV.pause();
+        }
+        if (null != mWakeLock && (!mWakeLock.isHeld())) {
+            mWakeLock.release();
         }
     }
 
@@ -807,22 +879,32 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
          */
         mHandlerThread.quit();
         Log.v(TAG, "onDestroy");
-
+        if (null != mWakeLock && (!mWakeLock.isHeld())) {
+            mWakeLock.release();
+        }
     }
 
     @Override
     protected void executeMessage(int instructions) {
-        if (instructions == 1001 || instructions == 1003) {
+        if (instructions == 1001 || instructions == 1003) {//禁止、开启
             if (instructions == 1001) {
                 aCache.put(KeyUtils.S_STATUS, "-1");
             } else {
                 aCache.put(KeyUtils.S_STATUS, "1");
             }
             isMsg = true;
+            stop();
             getAds();
-
-        } else if (instructions == 1002) {
+        } else if (instructions == 1002) {//实时截屏
             actualShot();
+        } else if (instructions == 1005) {//配置广告
+            isMsg = true;
+            stop();
+            getAds();
+        } else if (instructions == 1006) {//删除配置
+            isMsg = true;
+            stop();
+            getAds();
         }
     }
 
@@ -853,10 +935,15 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            finish();
-            //是不是禁用
+        if (StringUtils.toInt(aCache.getAsString(KeyUtils.S_STATUS)) != 1) {
+            //屏幕被禁用
+            return true;
+        } else {
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                finish();
+            }
         }
+
         return super.dispatchTouchEvent(ev);
     }
 

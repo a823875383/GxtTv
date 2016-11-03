@@ -1,3 +1,4 @@
 /build
 *.jks
 *.apk
+/src/main/jni

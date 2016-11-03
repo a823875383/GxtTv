@@ -1,18 +1,20 @@
 package com.jsqix.gxt.tv.base;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
+import com.baidu.android.pushservice.PushConstants;
+import com.baidu.android.pushservice.PushManager;
+import com.jsqix.gxt.tv.BuildConfig;
 import com.jsqix.gxt.tv.service.BroadCastService;
-import com.jsqix.gxt.tv.service.ScreenCapService;
+import com.jsqix.gxt.tv.service.SilentUpdateService;
+import com.jsqix.gxt.tv.utils.BaiduUtils;
 import com.jsqix.gxt.tv.utils.CrashHandler;
 import com.jsqix.gxt.tv.utils.DeviceUtils;
 import com.jsqix.gxt.tv.utils.PollingUtils;
 import com.jsqix.gxt.tv.utils.SDLogUtils;
-import com.jsqix.gxt.tv.utils.TimeUtils;
 
 import org.apache.log4j.Logger;
 
@@ -37,12 +39,18 @@ public class AppContext extends Application {
         Intent i = new Intent(this, BroadCastService.class);
         startService(i);
         // 推送
-        // JPushInterface.setDebugMode(true);
-        JPushInterface.init(this);
+        if ("jpush".equals(BuildConfig.FLAVOR)) {//极光
+            JPushInterface.setDebugMode(BuildConfig.DEBUG);
+            JPushInterface.init(this);
+        } else if ("baidu".equals(BuildConfig.FLAVOR)) {//百度云
+            PushManager.startWork(getApplicationContext(),
+                    PushConstants.LOGIN_TYPE_API_KEY,
+                    BaiduUtils.getMetaValue(this, "baidu_push_key"));
+        }
+        //开启自动更新功能
+        PollingUtils.startPollingService(this, 1 * 60, SilentUpdateService.class, SilentUpdateService.ACTION);
         // 打印设备信息
         printDevice();
-        //应用启动时开始启动定时截屏服务
-        PollingUtils.startPollingService(this, AlarmManager.RTC, TimeUtils.getFirstTime(), TimeUtils.SCREENSHOT, ScreenCapService.class, ScreenCapService.DS_ACTION);
 
         super.onCreate();
     }

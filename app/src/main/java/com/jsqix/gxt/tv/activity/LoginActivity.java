@@ -1,5 +1,6 @@
 package com.jsqix.gxt.tv.activity;
 
+import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +13,11 @@ import com.jsqix.gxt.tv.api.InterfaceJSONPost;
 import com.jsqix.gxt.tv.api.JSONPost;
 import com.jsqix.gxt.tv.base.BaseAty;
 import com.jsqix.gxt.tv.obj.LoginResult;
+import com.jsqix.gxt.tv.service.ScreenCapService;
 import com.jsqix.gxt.tv.utils.KeyUtils;
+import com.jsqix.gxt.tv.utils.PollingUtils;
 import com.jsqix.gxt.tv.utils.StringUtils;
+import com.jsqix.gxt.tv.utils.TimeUtils;
 import com.jsqix.gxt.tv.utils.ToastUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
@@ -45,7 +49,7 @@ public class LoginActivity extends BaseAty implements InterfaceJSONPost {
         if (StringUtils.notNull(aCache.getAsString(KeyUtils.S_ID))) {
             loginName.setText(aCache.getAsString(KeyUtils.U_NAME));
             loginPass.setText(aCache.getAsString(KeyUtils.U_PASS));
-            login();
+//            login();
         }
     }
 
@@ -87,6 +91,14 @@ public class LoginActivity extends BaseAty implements InterfaceJSONPost {
                 aCache.put(KeyUtils.S_ID, loginResult.getObj().getDevice_id());
                 aCache.put(KeyUtils.S_STATUS, loginResult.getObj().getDevice_status());
                 aCache.put(KeyUtils.S_PHONE, loginResult.getObj().getDevice_phone());
+                aCache.put(KeyUtils.S_TIME, loginResult.getObj().getDevice_interval());
+
+                //应用启动时开始启动定时截屏服务
+                PollingUtils.stopPollingService(this, ScreenCapService.class, ScreenCapService.DS_ACTION);
+                int interval = StringUtils.toInt(aCache.getAsString(KeyUtils.S_TIME));
+                PollingUtils.startPollingService(this, AlarmManager.RTC, TimeUtils.getFirstTime(interval), interval >= 1 ? interval * 60 : TimeUtils.SCREENSHOT, ScreenCapService.class, ScreenCapService.DS_ACTION);
+
+
                 if (StringUtils.isEmpty(loginResult.getObj().getDevice_name())) {
                     startActivity(new Intent(this, NameActivity.class));
                 } else {

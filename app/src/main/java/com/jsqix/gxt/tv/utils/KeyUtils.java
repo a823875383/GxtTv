@@ -15,4 +15,5 @@ public class KeyUtils {
     public final static String S_STATUS = "screen_status";
     public final static String S_NAME = "screen_name";
     public final static String S_PHONE = "screen_phone";
+    public final static String S_TIME = "screen_time";
 }

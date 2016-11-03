@@ -24,6 +24,11 @@ android {
         targetSdkVersion 19
         versionCode version_code
         versionName version_name
+
+        ndk {
+            moduleName "gxt"         //生成的so名字
+            abiFilters "armeabi"  //输出指定体系结构下的so库。
+        }
     }
     buildTypes {
         release {
@@ -37,7 +42,7 @@ android {
                         File outputDirectory = new File(outputFile.parent);
                         def fileName
                         if (variant.buildType.name == "release") {
-                            fileName = "app_v${defaultConfig.versionName}_${packageTime()}_${variant.productFlavors[0].name}.apk"
+                            fileName = "app_v${defaultConfig.versionName}_${packageTime()}.apk"
                         } else {
                             fileName = "app_v${defaultConfig.versionName}-debug.apk"
                         }

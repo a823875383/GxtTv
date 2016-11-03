@@ -8,7 +8,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.jsqix.gxt.tv.R;
-import com.jsqix.gxt.tv.utils.ACache;
 import com.jsqix.gxt.tv.utils.StringUtils;
 import com.jsqix.gxt.tv.view.LoadingDialog;
 import com.jsqix.gxt.tv.view.MyDialog;
@@ -16,7 +15,6 @@ import com.lidroid.xutils.ViewUtils;
 
 public abstract class BaseAty extends MsgAty {
     private String TAG = "BaseAty";
-    public ACache aCache;
     private LoadingDialog loadingDialog;
 
 
@@ -27,7 +25,6 @@ public abstract class BaseAty extends MsgAty {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        aCache = ACache.get(this);
         loadingDialog = new LoadingDialog(this);
     }
     public abstract void initView();

@@ -12,7 +12,7 @@ import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.downapk.ShellUtils;
+import com.jsqix.gxt.tv.update.ShellUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

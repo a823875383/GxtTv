@@ -8,6 +8,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
+import com.jsqix.gxt.tv.BDVideoViewActivity;
 import com.jsqix.gxt.tv.R;
 import com.jsqix.gxt.tv.WebActivity;
 import com.jsqix.gxt.tv.adapter.HomeAdapter;
@@ -17,6 +18,7 @@ import com.jsqix.gxt.tv.api.JSONGet;
 import com.jsqix.gxt.tv.base.ADAty;
 import com.jsqix.gxt.tv.obj.HomeResult;
 import com.jsqix.gxt.tv.utils.KeyUtils;
+import com.jsqix.gxt.tv.utils.StringUtils;
 import com.jsqix.gxt.tv.utils.ToastUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnItemClick;
@@ -42,13 +44,23 @@ public class HomeActivity extends ADAty implements InterfaceJSONGet {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        if (StringUtils.toInt(aCache.getAsString(KeyUtils.S_STATUS)) != 1) {
+            playerUtil.stopTask();
+            Intent intent = new Intent(this, BDVideoViewActivity.class);
+            startActivity(intent);
+        }
         //开启定时上传截图服务
 //        PollingUtils.startPollingService(this, 2 * 60, ScreenUpService.class, ScreenUpService.ACTION);
     }
 
     @Override
     protected void executeMessage(int instructions) {
-        if (instructions == 1001) {
+        if (instructions == 1001) {//禁用
+            aCache.put(KeyUtils.S_STATUS, "-1");
+            playerUtil.stopTask();
+            Intent intent = new Intent(this, BDVideoViewActivity.class);
+            startActivity(intent);
+        } else if (instructions == 1003) {//启用
 
         } else if (instructions == 1002) {
             actualShot();
