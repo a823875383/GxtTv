@@ -107,8 +107,14 @@ public class ScreentShotUtil {
 
         if (ShellUtils.checkRootPermission() || PackageUtils.isSystemApplication(context)) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                ShellUtils.CommandResult result = ShellUtils.execCommand("/system/bin/screencap -p " + fileFullPath, true);
-                Logger.getLogger("takeScreenshot").error(result.successMsg + result.errorMsg + result.result);
+                if (ShellUtils.checkRootPermission()) {
+                    ShellUtils.CommandResult result = ShellUtils.execCommand("/system/bin/screencap -p " + fileFullPath, true);
+                    Logger.getLogger("takeScreenshot").error(result.successMsg + result.errorMsg + result.result);
+
+                } else {
+                    ShellUtils.CommandResult result = ShellUtils.execCommand("/system/bin/screencap -p " + fileFullPath, false);
+                    Logger.getLogger("takeScreenshot").error(result.successMsg + result.errorMsg + result.result);
+                }
             }
         } else {
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
