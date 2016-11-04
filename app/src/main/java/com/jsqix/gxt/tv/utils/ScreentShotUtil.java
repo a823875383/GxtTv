@@ -12,7 +12,10 @@ import android.view.Surface;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.jsqix.gxt.tv.update.PackageUtils;
 import com.jsqix.gxt.tv.update.ShellUtils;
+
+import org.apache.log4j.Logger;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -102,10 +105,10 @@ public class ScreentShotUtil {
             fileFullPath = "/data/local/tmp/" + fileName;
         }
 
-        if (ShellUtils.checkRootPermission()) {
+        if (ShellUtils.checkRootPermission() || PackageUtils.isSystemApplication(context)) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                 ShellUtils.CommandResult result = ShellUtils.execCommand("/system/bin/screencap -p " + fileFullPath, true);
-                Log.d("", result.successMsg + result.errorMsg + result.result);
+                Logger.getLogger("takeScreenshot").error(result.successMsg + result.errorMsg + result.result);
             }
         } else {
             if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {

@@ -15,6 +15,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import com.jsqix.gxt.tv.activity.LoginActivity;
 import com.jsqix.gxt.tv.base.BaseAty;
 import com.jsqix.gxt.tv.utils.DensityUtil;
 import com.jsqix.gxt.tv.utils.KeyUtils;
@@ -72,6 +73,9 @@ public class WebActivity extends BaseAty {
 
         } else if (instructions == 1002) {
             actualShot();
+        } else if (instructions == 1007) {//解绑
+            finish();
+            startActivity(new Intent(this, LoginActivity.class));
         }
 
     }

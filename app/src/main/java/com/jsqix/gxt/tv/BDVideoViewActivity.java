@@ -1,6 +1,7 @@
 package com.jsqix.gxt.tv;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import com.baidu.cyberplayer.core.BVideoView.OnNetworkSpeedListener;
 import com.baidu.cyberplayer.core.BVideoView.OnPlayingBufferCacheListener;
 import com.baidu.cyberplayer.core.BVideoView.OnPreparedListener;
 import com.google.gson.Gson;
+import com.jsqix.gxt.tv.activity.LoginActivity;
 import com.jsqix.gxt.tv.api.HttpUtil;
 import com.jsqix.gxt.tv.api.InterfaceJSONPost;
 import com.jsqix.gxt.tv.api.JSONPost;
@@ -905,6 +907,9 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             isMsg = true;
             stop();
             getAds();
+        } else if (instructions == 1007) {//解绑
+            finish();
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 

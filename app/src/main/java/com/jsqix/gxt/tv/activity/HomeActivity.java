@@ -64,6 +64,9 @@ public class HomeActivity extends ADAty implements InterfaceJSONGet {
 
         } else if (instructions == 1002) {
             actualShot();
+        } else if (instructions == 1007) {//解绑
+            finish();
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
 

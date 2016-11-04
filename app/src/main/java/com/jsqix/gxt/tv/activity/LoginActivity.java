@@ -3,6 +3,7 @@ package com.jsqix.gxt.tv.activity;
 import android.app.AlarmManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -11,6 +12,7 @@ import com.jsqix.gxt.tv.R;
 import com.jsqix.gxt.tv.api.HttpUtil;
 import com.jsqix.gxt.tv.api.InterfaceJSONPost;
 import com.jsqix.gxt.tv.api.JSONPost;
+import com.jsqix.gxt.tv.base.AppContext;
 import com.jsqix.gxt.tv.base.BaseAty;
 import com.jsqix.gxt.tv.obj.LoginResult;
 import com.jsqix.gxt.tv.service.ScreenCapService;
@@ -112,5 +114,13 @@ public class LoginActivity extends BaseAty implements InterfaceJSONPost {
         } else {
             ToastUtils.toast(this, "链接错误,请稍后重试");
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            AppContext.getInstance().AppExit(this);
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

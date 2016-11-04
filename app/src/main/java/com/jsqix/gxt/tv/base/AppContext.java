@@ -15,6 +15,7 @@ import com.jsqix.gxt.tv.utils.CrashHandler;
 import com.jsqix.gxt.tv.utils.DeviceUtils;
 import com.jsqix.gxt.tv.utils.PollingUtils;
 import com.jsqix.gxt.tv.utils.SDLogUtils;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.apache.log4j.Logger;
 
@@ -32,8 +33,11 @@ public class AppContext extends Application {
 
     @Override
     public void onCreate() {
-        // bug日志
+        // 本地bug日志
         CrashHandler.getInstance().init(this);
+        //腾讯bugly
+        CrashReport.initCrashReport(this, "7d6521e11b", true);
+
         configLog();
         // 电视需要
         Intent i = new Intent(this, BroadCastService.class);
