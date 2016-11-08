@@ -57,7 +57,7 @@ public class SplashActivity extends BaseAty {
     }
 
     public void setAliasAndTag() {
-        String alias = JPushUtil.getUUID(this, "", Constant.Channel.BOX);
+        String alias = JPushUtil.getUUID(this, "", Constant.Channel.TV);
         if (TextUtils.isEmpty(alias)) {
             Log.i(TAG, "alias empty");
             SDLogUtils.getLogger("Splash").error("alias empty");
@@ -122,8 +122,8 @@ public class SplashActivity extends BaseAty {
                 case 0:
                     logs = "Set tag and alias success";
                     SDLogUtils.getLogger("Splash").error(logs);
-                    aCache.put(KeyUtils.MAC, Constant.getMacAddress(Constant.Channel.BOX).replace(":", ""));
-                    aCache.put(KeyUtils.TOKEN, JPushUtil.getUUID(SplashActivity.this, "", Constant.Channel.BOX));
+                    aCache.put(KeyUtils.MAC, Constant.getMacAddress(Constant.Channel.TV).replace(":", ""));
+                    aCache.put(KeyUtils.TOKEN, JPushUtil.getUUID(SplashActivity.this, "", Constant.Channel.TV));
                     Log.i(TAG, logs);
                     jump2Login();
                     break;
@@ -157,8 +157,8 @@ public class SplashActivity extends BaseAty {
                 case 0:
                     logs = "Set tag and alias success";
                     SDLogUtils.getLogger("Splash").error(logs);
-                    aCache.put(KeyUtils.MAC, Constant.getMacAddress(Constant.Channel.BOX).replace(":", ""));
-                    aCache.put(KeyUtils.TOKEN, JPushUtil.getUUID(SplashActivity.this, "", Constant.Channel.BOX));
+                    aCache.put(KeyUtils.MAC, Constant.getMacAddress(Constant.Channel.TV).replace(":", ""));
+                    aCache.put(KeyUtils.TOKEN, JPushUtil.getUUID(SplashActivity.this, "", Constant.Channel.TV));
                     Log.i(TAG, logs);
                     jump2Login();
                     break;
