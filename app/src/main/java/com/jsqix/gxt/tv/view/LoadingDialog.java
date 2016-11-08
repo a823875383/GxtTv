@@ -27,7 +27,7 @@ public class LoadingDialog extends Dialog {
     public LoadingDialog(Context context) {
         super(context, R.style.LoadingDialog);
         playerUtil = PlayerUtil.getInstence(context);
-        setCancelable(false);
+        setCancelable(true);
         this.mContext = context;
 
         inflater = (LayoutInflater) mContext
