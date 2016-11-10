@@ -17,8 +17,11 @@
         android:paddingTop="15dp">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:drawablePadding="10dp"
+            android:gravity="center"
             android:text="供销通信息广告终端"
             android:textColor="@color/white"
             android:textSize="@dimen/max_font" />

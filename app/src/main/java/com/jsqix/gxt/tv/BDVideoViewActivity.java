@@ -909,6 +909,7 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             getAds();
         } else if (instructions == 1007) {//解绑
             finish();
+            aCache.put(KeyUtils.S_ID,"");
             startActivity(new Intent(this, LoginActivity.class));
         }
     }

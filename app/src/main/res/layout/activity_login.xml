@@ -17,6 +17,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:gravity="center"
             android:text="供销通信息广告终端"
             android:textColor="@color/white"
             android:textSize="@dimen/max_font" />
@@ -63,8 +65,8 @@
                     android:drawableLeft="@mipmap/ic_pass"
                     android:drawablePadding="10dp"
                     android:hint="密码"
-                    android:singleLine="true"
                     android:inputType="textPassword"
+                    android:singleLine="true"
                     android:textColorHint="@color/white"
                     android:textSize="@dimen/big_font" />
             </LinearLayout>
