@@ -2,6 +2,9 @@ package com.jsqix.gxt.tv.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.InputDevice;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -80,5 +83,23 @@ public class NameActivity extends BaseAty implements InterfaceJSONPost {
         } else {
             ToastUtils.toast(this, "链接错误,请稍后重试");
         }
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent ev) {
+        if (0 != (ev.getSource() & InputDevice.SOURCE_CLASS_POINTER)) {
+            if (ev.getAction() == MotionEvent.BUTTON_SECONDARY) {
+                return true;
+            }
+        }
+        return super.onGenericMotionEvent(ev);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

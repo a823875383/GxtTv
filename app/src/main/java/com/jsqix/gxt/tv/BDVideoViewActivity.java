@@ -15,6 +15,7 @@ import android.os.PowerManager.WakeLock;
 import android.os.Process;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -909,7 +910,7 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             getAds();
         } else if (instructions == 1007) {//解绑
             finish();
-            aCache.put(KeyUtils.S_ID,"");
+            aCache.put(KeyUtils.S_ID, "");
             startActivity(new Intent(this, LoginActivity.class));
         }
     }
@@ -940,6 +941,26 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
     }
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (StringUtils.toInt(aCache.getAsString(KeyUtils.S_STATUS)) != 1) {
+                //屏幕被禁用
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if (StringUtils.toInt(aCache.getAsString(KeyUtils.S_STATUS)) != 1) {
+            //屏幕被禁用
+            return true;
+        }
+        return super.onGenericMotionEvent(event);
+    }
+
+    @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (StringUtils.toInt(aCache.getAsString(KeyUtils.S_STATUS)) != 1) {
             //屏幕被禁用
@@ -949,7 +970,6 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
                 finish();
             }
         }
-
         return super.dispatchTouchEvent(ev);
     }
 
