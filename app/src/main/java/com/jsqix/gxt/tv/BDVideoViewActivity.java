@@ -776,6 +776,10 @@ public class BDVideoViewActivity extends MsgAty implements ViewFactory,
             SYNC_Playing.notify();
         }
         mPlayerStatus = PLAYER_STATUS.PLAYER_IDLE;
+        File file = new File(mVideoSource);
+        if (file.exists()) {
+            file.delete();
+        }
         start();
         return true;
     }
